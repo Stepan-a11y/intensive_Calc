@@ -22,14 +22,14 @@ calc.addEventListener('click', (event) => {
         out.textContent = "";
     }
 
-    if (event.target.textContent === "B") {
+    if (event.target.textContent === "Cl") {
         if (secondNum === "") {
             let back = firstNum.split('');
             back.pop();
             let str = back.join('');
             firstNum = str;
             out.textContent = firstNum;
-        } else {
+        }else {
             let back = secondNum.split('');
             back.pop();
             let str = back.join('');
@@ -40,25 +40,25 @@ calc.addEventListener('click', (event) => {
 
     if (numbers.includes(key)) {
         if (secondNum === "" && sign === "") {
-            if (key === '.' && firstNum.includes('.')) {
-                firstNum += "";
-                out.textContent = firstNum;
+            firstNum += key;
+            let res = Number(firstNum);
+            if(isNaN(res)){
+                firstNum = firstNum.substr(0, firstNum.length-1);
             } else {
-                firstNum += key;
-                out.textContent = firstNum;
-            }
+                out.textContent = res;
+            }    
         } else if (firstNum !== "" && sign !== "" && finish) {
             secondNum = key;
             finish = false;
             out.textContent = secondNum;
         } else {
-            if (key === '.' && secondNum.includes('.')) {
-                secondNum += "";
-                out.textContent = secondNum;
+            secondNum += key;
+            let res = Number(secondNum);
+            if(isNaN(res)){
+                secondNum = secondNum.substr(0, secondNum.length-1);
             } else {
-                secondNum += key;
-                out.textContent = secondNum;
-            }
+                out.textContent = res;
+            }    
         }
     }
 
@@ -87,9 +87,15 @@ calc.addEventListener('click', (event) => {
                 firstNum = firstNum / secondNum;
                 break;
         }
-        let outPut = Number(firstNum).toFixed(8)
+        
+        let outPut;
+        if(firstNum === Infinity){
+            out.textContent = "Ошибка!"
+        } else {
+        outPut = Number(firstNum).toFixed(8)
         out.textContent = Number(outPut);
         finish = true;
+        }
     }
 
     if (key === "%") {

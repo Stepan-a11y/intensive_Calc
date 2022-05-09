@@ -7,6 +7,7 @@ let sign = "";
 let finish;
 out.textContent = "";
 
+
 let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
 let signs = ['+', '-', '*', '/']
 
@@ -29,7 +30,12 @@ calc.addEventListener('click', (event) => {
             let str = back.join('');
             firstNum = str;
             out.textContent = firstNum;
-        }else {
+        } else if (firstNum !== "" && sign !== "" && finish) {
+            firstNum = "";
+            secondNum = "";
+            finish = false;
+            out.textContent = "";
+        } else {
             let back = secondNum.split('');
             back.pop();
             let str = back.join('');
@@ -38,9 +44,12 @@ calc.addEventListener('click', (event) => {
         }
     }
 
-    if (numbers.includes(key)) {
+    if (numbers.includes(key)) {      
         if (secondNum === "" && sign === "") {
             firstNum += key;
+            if(firstNum.length > 8){
+                firstNum = firstNum.substr(0, firstNum.length - 1)
+            }
             let res = Number(firstNum);
             if(isNaN(res)){
                 firstNum = firstNum.substr(0, firstNum.length-1);
@@ -53,12 +62,15 @@ calc.addEventListener('click', (event) => {
             out.textContent = secondNum;
         } else {
             secondNum += key;
+            if(secondNum.length > 8){
+                secondNum = secondNum.substr(0, secondNum.length - 1)
+            }
             let res = Number(secondNum);
             if(isNaN(res)){
                 secondNum = secondNum.substr(0, secondNum.length-1);
             } else {
                 out.textContent = res;
-            }    
+            }
         }
     }
 
@@ -67,6 +79,8 @@ calc.addEventListener('click', (event) => {
         out.textContent = sign;
         return;
     }
+
+    
 
     if (key === "=") {
         if (secondNum === "") {
@@ -88,13 +102,27 @@ calc.addEventListener('click', (event) => {
                 break;
         }
         
-        let outPut;
         if(firstNum === Infinity){
-            out.textContent = "Ошибка!"
+            out.textContent = "Ошибка!";
+            firstNum = "";
+            secondNum = "";
+            sign = "";
         } else {
-        outPut = Number(firstNum).toFixed(8)
-        out.textContent = Number(outPut);
-        finish = true;
+            if(Number.isInteger(firstNum)){
+                let str = firstNum.toString();
+                    if(str.length > 7){
+                        let exp = Number(str).toExponential(4);
+                        out.textContent = exp;
+                        finish = true;
+                    } else {
+                        out.textContent = str;
+                        finish = true;
+                    }
+            } else {
+                let floatNum = Number(firstNum).toFixed(8);
+                out.textContent = floatNum;
+                finish = true;
+            }
         }
     }
 
